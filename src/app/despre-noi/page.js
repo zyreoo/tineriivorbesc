@@ -1,4 +1,15 @@
+'use client';
+
 import styles from './page.module.css';
+
+const handleDownload = (filename) => {
+  const link = document.createElement('a');
+  link.href = `/${filename}`;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
 
 export default function DespreNoi() {
   return (
@@ -264,9 +275,12 @@ export default function DespreNoi() {
               Ești jurnalist, partener sau sponsor și vrei să știi mai multe? Am pregătit un kit cu 
               informații despre ce facem, cum am ajuns aici și cum putem colabora.
             </p>
-            <a href="/Media_Kit_Tinerii_Vorbesc.docx" className={styles.downloadBtn} download>
+            <button 
+              onClick={() => handleDownload('Media_Kit_Tinerii_Vorbesc.docx')}
+              className={styles.downloadBtn}
+            >
               Descarcă Media Kit →
-            </a>
+            </button>
           </div>
         </div>
       </section>

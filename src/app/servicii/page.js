@@ -1,5 +1,16 @@
+'use client';
+
 import Link from 'next/link';
 import styles from './page.module.css';
+
+const handleDownload = (filename) => {
+  const link = document.createElement('a');
+  link.href = `/${filename}`;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
 
 export default function Servicii() {
   return (
@@ -276,9 +287,12 @@ export default function Servicii() {
               Tarifele se stabilesc în funcție de tipul evenimentului, durata, complexitatea și cerințele organizatorului. 
               Îți voi oferi o ofertă clară, corectă și adaptată proiectului tău.
             </p>
-            <a href="/Servicii_Carina_Tanaselea_COMPLET.docx" className={styles.downloadBtn} download>
+            <button 
+              onClick={() => handleDownload('Servicii_Carina_Tanaselea_COMPLET.docx')}
+              className={styles.downloadBtn}
+            >
               Descarcă prezentarea completă a serviciilor →
-            </a>
+            </button>
           </div>
         </div>
       </section>

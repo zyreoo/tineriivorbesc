@@ -269,9 +269,13 @@
   padding: 1rem 2rem;
   background: var(--primary);
   color: white;
+  border: none;
   border-radius: 0.5rem;
   font-weight: 600;
+  font-size: 1rem;
+  font-family: inherit;
   text-decoration: none;
+  cursor: pointer;
   transition: all 0.3s;
   margin-top: 1rem;
 }

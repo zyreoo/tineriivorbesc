@@ -1,4 +1,15 @@
+'use client';
+
 import styles from './page.module.css';
+
+const handleDownload = (filename) => {
+  const link = document.createElement('a');
+  link.href = `/${filename}`;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
 
 export default function Sponsorizari() {
   return (
@@ -74,9 +85,12 @@ export default function Sponsorizari() {
               Am făcut un kit cu toate informațiile importante – ce facem, cum am ajuns aici, 
               ce impact avem și cum putem colabora. E util dacă vrei să ne prezinți altora.
             </p>
-            <a href="/Media_Kit_Tinerii_Vorbesc.docx" className={styles.downloadBtn} download>
+            <button 
+              onClick={() => handleDownload('Media_Kit_Tinerii_Vorbesc.docx')}
+              className={styles.downloadBtn}
+            >
               Descarcă Media Kit →
-            </a>
+            </button>
           </div>
         </div>
       </section>
