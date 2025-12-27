@@ -1,36 +1,111 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Tinerii Vorbesc - Website
+
+This is a website built for **Tinerii Vorbesc**, a non-profit organization (ONG) in Romania that empowers young people through podcasts, events, and community projects.
+
+## About the Organization
+
+**Tinerii Vorbesc** (Young People Speak) is a movement dedicated to giving young people in Romania a platform to express their ideas, share their stories, and create meaningful change. Founded by Carina Tănăselea, the organization focuses on:
+
+- 🎙️ Podcasts featuring real conversations with young people and special guests
+- 📅 Events, workshops, and conferences that bring young people together
+- 🤝 Community projects that transform ideas into reality
+- 💬 Creating spaces where young voices are truly heard
+
+## Project Overview
+
+This website serves as the digital home for Tinerii Vorbesc, providing:
+
+- Information about the organization and its mission
+- Podcast episodes and content
+- Project showcases and initiatives
+- Volunteer signup forms
+- Sponsorship and support information
+- Contact and collaboration opportunities
+- Blog with reflections and resources
+
+## Technology Stack
+
+- **Framework**: Next.js 16.1.1
+- **React**: 19.2.3
+- **Styling**: CSS Modules
+- **Language**: Romanian
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- Node.js (v18 or higher)
+- npm, yarn, pnpm, or bun
+
+### Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <repository-url>
+cd tineriivorbesc
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+3. Run the development server:
+```bash
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-## Learn More
+### Build for Production
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run build
+npm start
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+src/
+├── app/                    # Next.js app router pages
+│   ├── page.js            # Home page
+│   ├── despre-noi/        # About Us page
+│   ├── podcasturi/        # Podcasts page
+│   ├── proiecte/          # Projects page
+│   ├── servicii/          # Services page
+│   ├── blog/              # Blog page
+│   ├── sponsorizari/      # Support/Sponsorships page
+│   ├── contact/           # Contact page
+│   └── faq/               # FAQ page
+├── components/            # Reusable components
+│   ├── Navigation.js     # Main navigation
+│   └── Footer.js         # Site footer
+└── globals.css            # Global styles
+```
 
-## Deploy on Vercel
+## Features
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- ✅ Fully responsive design (mobile-friendly)
+- ✅ Modern, clean UI with gradient hero sections
+- ✅ Interactive FAQ accordion
+- ✅ Contact and volunteer forms
+- ✅ Podcast episode showcase
+- ✅ Project gallery
+- ✅ Blog structure
+- ✅ Sponsorship information and forms
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Contact
+
+For questions about the website or the organization:
+
+- **Email**: carinadianatanaselea@gmail.com
+- **Location**: Romania
+
+## License
+
+This project was built for Tinerii Vorbesc, a non-profit organization. All rights reserved.
+
+---
+
+**Note**: This website was built to support the mission of Tinerii Vorbesc in empowering young voices and creating positive change in Romania.

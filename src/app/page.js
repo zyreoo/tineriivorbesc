@@ -1,66 +1,66 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import Link from 'next/link';
+import styles from './page.module.css';
 
 export default function Home() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.js file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className={styles.home}>
+      {/* Hero Section */}
+      <section className={styles.hero}>
+        <div className={styles.heroContent}>
+          <h1 className={styles.heroTitle}>Tinerii Vorbesc</h1>
+          <p className={styles.heroSubtitle}>Vocea noii generații</p>
+          <p className={styles.heroDescription}>
+            Podcasturi, proiecte și evenimente pentru tineri care vor să facă diferența.
           </p>
+          <p className={styles.heroText}>
+            Hei! Bine ai venit. Aici nu e doar un ONG clasic – e mai mult decât atât. E un loc unde tinerii 
+            chiar au ceva de spus și unde cineva chiar ascultă.
+          </p>
+          <p className={styles.heroText}>
+            Am început cu un podcast, dar am ajuns să construim o comunitate. Organizăm evenimente, facem proiecte 
+            și, cel mai important, dăm oamenilor tineri șansa să-și spună povestea.
+          </p>
+          <p className={styles.heroText}>
+            Dacă ai o idee, o opinie sau pur și simplu vrei să te implici, ești în locul potrivit. 
+            Hai să vorbim!
+          </p>
+          <div className={styles.ctaButtons}>
+            <Link href="/podcasturi" className={`${styles.btn} ${styles.btnPrimary}`}>
+              🎙️ Ascultă podcasturile
+            </Link>
+            <Link href="/proiecte" className={`${styles.btn} ${styles.btnSecondary}`}>
+              📅 Vezi proiectele noastre
+            </Link>
+            <Link href="/sponsorizari" className={`${styles.btn} ${styles.btnSecondary}`}>
+              💌 Susține-ne
+            </Link>
+          </div>
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* Gallery Section */}
+      <section className={styles.gallerySection}>
+        <div className={styles.container}>
+          <h2 className={styles.sectionTitle}>Din culisele noastre</h2>
+          <p className={styles.sectionDescription}>
+            Câteva momente din evenimentele și proiectele noastre – oameni reali, conversații reale, impact real.
+          </p>
+          <div className={styles.galleryGrid}>
+            <div className={styles.galleryPlaceholder}>
+              <p>Galerie foto</p>
+              <Link href="/proiecte" className={styles.galleryLink}>
+                Vezi galeria completă →
+              </Link>
+            </div>
+            <div className={styles.galleryPlaceholder}>
+              <p>Galerie foto</p>
+            </div>
+            <div className={styles.galleryPlaceholder}>
+              <p>Galerie foto</p>
+            </div>
+          </div>
         </div>
-      </main>
+      </section>
     </div>
   );
 }
