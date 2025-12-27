@@ -261,6 +261,25 @@
   font-size: 1.1rem;
   line-height: 1.7;
   color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
+.downloadBtn {
+  display: inline-block;
+  padding: 1rem 2rem;
+  background: var(--primary);
+  color: white;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s;
+  margin-top: 1rem;
+}
+
+.downloadBtn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 }
 
 @media (max-width: 768px) {

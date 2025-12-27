@@ -74,8 +74,8 @@ export default function Sponsorizari() {
               Am făcut un kit cu toate informațiile importante – ce facem, cum am ajuns aici, 
               ce impact avem și cum putem colabora. E util dacă vrei să ne prezinți altora.
             </p>
-            <a href="#" className={styles.downloadBtn} download>
-              Descarcă Media Kit PDF →
+            <a href="/Media_Kit_Tinerii_Vorbesc.docx" className={styles.downloadBtn} download>
+              Descarcă Media Kit →
             </a>
           </div>
         </div>

@@ -264,8 +264,8 @@ export default function DespreNoi() {
               Ești jurnalist, partener sau sponsor și vrei să știi mai multe? Am pregătit un kit cu 
               informații despre ce facem, cum am ajuns aici și cum putem colabora.
             </p>
-            <a href="#" className={styles.downloadBtn} download>
-              Descarcă PDF →
+            <a href="/Media_Kit_Tinerii_Vorbesc.docx" className={styles.downloadBtn} download>
+              Descarcă Media Kit →
             </a>
           </div>
         </div>

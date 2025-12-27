@@ -276,6 +276,9 @@ export default function Servicii() {
               Tarifele se stabilesc în funcție de tipul evenimentului, durata, complexitatea și cerințele organizatorului. 
               Îți voi oferi o ofertă clară, corectă și adaptată proiectului tău.
             </p>
+            <a href="/Servicii_Carina_Tanaselea_COMPLET.docx" className={styles.downloadBtn} download>
+              Descarcă prezentarea completă a serviciilor →
+            </a>
           </div>
         </div>
       </section>
