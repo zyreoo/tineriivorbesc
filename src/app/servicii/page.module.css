@@ -15,12 +15,10 @@
   margin: 0 0 1rem 0;
 }
 
-.heroDescription {
-  font-size: 1.2rem;
-  max-width: 800px;
-  margin: 0 auto;
+.heroSubtitle {
+  font-size: 1.3rem;
   opacity: 0.95;
-  line-height: 1.6;
+  font-weight: 500;
 }
 
 .container {
@@ -33,80 +31,236 @@
   padding: 4rem 0;
 }
 
-.servicesGrid {
+.contentSection {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.contentSection h2 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: var(--text-primary);
+}
+
+.contentSection p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+  color: var(--text-secondary);
+}
+
+.whySection {
+  background: var(--card-bg);
+  padding: 3rem;
+  border-radius: 1rem;
+}
+
+.whySection h2 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: var(--text-primary);
+  text-align: center;
+}
+
+.benefitsGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 2rem;
 }
 
-.serviceCard {
-  background: var(--card-bg);
-  padding: 3rem 2rem;
-  border-radius: 1rem;
-  text-align: center;
+.benefitCard {
+  background: var(--background);
+  padding: 2rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border);
   transition: transform 0.3s, box-shadow 0.3s;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.serviceCard:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+.benefitCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.serviceIcon {
-  font-size: 4rem;
-  margin-bottom: 1.5rem;
+.benefitCard h3 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+  line-height: 1.4;
 }
 
-.serviceCard h2 {
-  font-size: 1.75rem;
+.benefitCard p {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  font-size: 1rem;
+}
+
+.servicesSection {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.servicesSection h2 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: var(--text-primary);
+}
+
+.servicesList {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.serviceItem {
+  background: var(--card-bg);
+  padding: 2rem;
+  border-radius: 0.75rem;
+  border-left: 4px solid var(--primary);
+}
+
+.serviceItem h3 {
+  font-size: 1.5rem;
   margin-bottom: 1rem;
   color: var(--text-primary);
 }
 
-.serviceCard p {
-  color: var(--text-secondary);
-  line-height: 1.6;
-  font-size: 1.05rem;
+.serviceItem ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-.ctaSection {
+.serviceItem ul li {
+  padding: 0.5rem 0;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.serviceItem ul li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--primary);
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.serviceItem p {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin: 0;
+}
+
+.whyHelpSection {
   background: var(--card-bg);
-  padding: 4rem 3rem;
+  padding: 3rem;
   border-radius: 1rem;
+}
+
+.whyHelpSection h2 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: var(--text-primary);
   text-align: center;
 }
 
-.ctaSection h2 {
+.helpGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+}
+
+.helpCard {
+  background: var(--background);
+  padding: 2rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.helpCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.helpCard h3 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.helpCard p {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  font-size: 1rem;
+}
+
+.contactSection {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  background: var(--card-bg);
+  padding: 3rem;
+  border-radius: 1rem;
+}
+
+.contactSection h2 {
   font-size: 2.5rem;
   margin-bottom: 1.5rem;
   color: var(--text-primary);
-  line-height: 1.3;
 }
 
-.ctaSection p {
-  font-size: 1.2rem;
-  color: var(--text-secondary);
-  margin-bottom: 2rem;
-  line-height: 1.6;
-}
-
-.contactBtn {
-  display: inline-block;
-  padding: 1rem 3rem;
-  background: var(--primary);
-  color: white;
-  border-radius: 0.5rem;
-  font-weight: 600;
+.contactSection p {
   font-size: 1.1rem;
-  text-decoration: none;
-  transition: all 0.3s;
+  line-height: 1.7;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
 }
 
-.contactBtn:hover {
-  background: var(--primary-dark);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+.contactInfo {
+  margin-top: 2rem;
+  font-size: 1.2rem;
+}
+
+.contactInfo p {
+  margin: 1rem 0;
+  color: var(--text-primary);
+}
+
+.contactInfo a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s;
+}
+
+.contactInfo a:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+
+.pricingSection {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  background: var(--card-bg);
+  padding: 3rem;
+  border-radius: 1rem;
+}
+
+.pricingSection h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary);
+}
+
+.pricingSection p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
 }
 
 @media (max-width: 768px) {
@@ -114,16 +268,33 @@
     font-size: 2rem;
   }
 
-  .servicesGrid {
+  .heroSubtitle {
+    font-size: 1.1rem;
+  }
+
+  .contentSection h2,
+  .whySection h2,
+  .servicesSection h2,
+  .whyHelpSection h2,
+  .contactSection h2,
+  .pricingSection h2 {
+    font-size: 2rem;
+  }
+
+  .benefitsGrid,
+  .helpGrid {
     grid-template-columns: 1fr;
   }
 
-  .ctaSection {
-    padding: 3rem 2rem;
+  .whySection,
+  .whyHelpSection,
+  .contactSection,
+  .pricingSection {
+    padding: 2rem 1.5rem;
   }
 
-  .ctaSection h2 {
-    font-size: 2rem;
+  .benefitCard,
+  .helpCard {
+    padding: 1.5rem;
   }
 }
-
