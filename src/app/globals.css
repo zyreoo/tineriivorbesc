@@ -1,12 +1,12 @@
 :root {
   --background: #ffffff;
-  --foreground: #171717;
-  --primary: #2563eb;
-  --primary-dark: #1d4ed8;
+  --foreground: #000000;
+  --primary: #d4af37;
+  --primary-dark: #b8941f;
   --secondary: #64748b;
-  --accent: #f59e0b;
-  --text-primary: #1f2937;
-  --text-secondary: #6b7280;
+  --accent: #d4af37;
+  --text-primary: #000000;
+  --text-secondary: #4a4a4a;
   --border: #e5e7eb;
   --card-bg: #f9fafb;
 }
@@ -102,7 +102,7 @@ p {
 .btn-primary:hover {
   background: var(--primary-dark);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
 }
 
 .btn-secondary {

@@ -21,13 +21,13 @@
 .logo {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #2563eb;
+  color: #d4af37;
   text-decoration: none;
   transition: color 0.3s;
 }
 
 .logo:hover {
-  color: #1d4ed8;
+  color: #b8941f;
 }
 
 .menu {
@@ -40,7 +40,7 @@
 }
 
 .menu li a {
-  color: #1f2937;
+  color: #000000;
   text-decoration: none;
   font-weight: 500;
   transition: color 0.3s;
@@ -48,7 +48,7 @@
 }
 
 .menu li a:hover {
-  color: #2563eb;
+  color: #d4af37;
 }
 
 .menuButton {
@@ -64,13 +64,13 @@
 .menuButton span {
   width: 25px;
   height: 3px;
-  background: #1f2937;
+  background: #000000;
   transition: all 0.3s;
   border-radius: 2px;
 }
 
 .menuButton:hover span {
-  background: #2563eb;
+  background: #d4af37;
 }
 
 @media (max-width: 768px) {

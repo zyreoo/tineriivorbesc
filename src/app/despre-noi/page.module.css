@@ -3,7 +3,7 @@
 }
 
 .hero {
-  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
   color: white;
   padding: 4rem 0;
   text-align: center;
@@ -188,7 +188,7 @@
 .submitBtn:hover {
   background: var(--primary-dark);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
 }
 
 .checkboxGroup {
@@ -208,7 +208,7 @@
 }
 
 .checkboxLabel:hover {
-  background: rgba(37, 99, 235, 0.05);
+  background: rgba(212, 175, 55, 0.05);
 }
 
 .checkboxLabel input[type="checkbox"] {
@@ -242,7 +242,7 @@
 }
 
 .radioLabel:hover {
-  background: rgba(37, 99, 235, 0.05);
+  background: rgba(212, 175, 55, 0.05);
 }
 
 .radioLabel input[type="radio"] {
@@ -259,10 +259,10 @@
 }
 
 .benefitsSection {
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(29, 78, 216, 0.1) 100%);
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(184, 148, 31, 0.1) 100%);
   padding: 3rem;
   border-radius: 1rem;
-  border: 2px solid rgba(37, 99, 235, 0.2);
+  border: 2px solid rgba(212, 175, 55, 0.2);
 }
 
 .benefitsTitle {
@@ -283,7 +283,7 @@
   font-size: 1.1rem;
   line-height: 1.6;
   color: var(--text-secondary);
-  border-bottom: 1px solid rgba(37, 99, 235, 0.1);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.1);
 }
 
 .benefitsList li:last-child {
@@ -327,7 +327,7 @@
 .downloadBtn:hover {
   background: var(--primary-dark);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
 }
 
 @media (max-width: 768px) {

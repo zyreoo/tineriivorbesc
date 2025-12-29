@@ -1,5 +1,5 @@
 .footer {
-  background: #1f2937;
+  background: #000000;
   color: white;
   padding: 3rem 0 1.5rem;
   margin-top: 4rem;
@@ -21,13 +21,13 @@
 .section h3 {
   font-size: 1.5rem;
   margin-bottom: 0.5rem;
-  color: #60a5fa;
+  color: #d4af37;
 }
 
 .section h4 {
   font-size: 1.1rem;
   margin-bottom: 1rem;
-  color: #93c5fd;
+  color: #d4af37;
 }
 
 .section p {
@@ -53,14 +53,14 @@
 }
 
 .section ul li a:hover {
-  color: #60a5fa;
+  color: #d4af37;
 }
 
 .bottom {
-  border-top: 1px solid #374151;
+  border-top: 1px solid rgba(212, 175, 55, 0.3);
   padding-top: 1.5rem;
   text-align: center;
-  color: #9ca3af;
+  color: #ffffff;
 }
 
 @media (max-width: 768px) {
