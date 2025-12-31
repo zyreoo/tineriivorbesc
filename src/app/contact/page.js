@@ -76,7 +76,19 @@ export default function Contact() {
                   <span className={styles.contactIcon}>🔗</span>
                   <div>
                     <h3>Social Media</h3>
-                    <p>Urmărește-ne pe rețelele sociale pentru update-uri și momente din culise</p>
+                    <div className={styles.socialLinks}>
+                      <a href="https://www.youtube.com/@tineriivorbesc" target="_blank" rel="noopener noreferrer">
+                        YouTube
+                      </a>
+                      {' • '}
+                      <a href="https://www.instagram.com/tinerii_vorbesc/" target="_blank" rel="noopener noreferrer">
+                        Instagram
+                      </a>
+                      {' • '}
+                      <a href="https://www.facebook.com/profile.php?id=100080974780801" target="_blank" rel="noopener noreferrer">
+                        Facebook
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>

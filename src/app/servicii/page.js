@@ -273,7 +273,13 @@ export default function Servicii() {
             </p>
             <div className={styles.contactInfo}>
               <p>📧 <a href="mailto:carinadianatanaselea@gmail.com">carinadianatanaselea@gmail.com</a></p>
-              <p>📲 Instagram: <a href="https://instagram.com/tineriivorbesc" target="_blank" rel="noopener noreferrer">@tineriivorbesc</a></p>
+              <p>📲 Social Media: 
+                <a href="https://www.youtube.com/@tineriivorbesc" target="_blank" rel="noopener noreferrer"> YouTube</a>
+                {' • '}
+                <a href="https://www.instagram.com/tinerii_vorbesc/" target="_blank" rel="noopener noreferrer"> Instagram</a>
+                {' • '}
+                <a href="https://www.facebook.com/profile.php?id=100080974780801" target="_blank" rel="noopener noreferrer"> Facebook</a>
+              </p>
             </div>
           </div>
         </div>

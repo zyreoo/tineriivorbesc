@@ -3,7 +3,7 @@
 }
 
 .hero {
-  background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
+  background: linear-gradient(135deg, #f4c430 0%, #d4a017 100%);
   color: white;
   padding: 6rem 0;
   text-align: center;
@@ -68,7 +68,7 @@
 
 .btnPrimary {
   background: white;
-  color: #d4af37;
+  color: #f4c430;
 }
 
 .btnPrimary:hover {
@@ -84,7 +84,7 @@
 
 .btnSecondary:hover {
   background: white;
-  color: #d4af37;
+  color: #f4c430;
 }
 
 .gallerySection {

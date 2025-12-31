@@ -26,7 +26,23 @@ export default function Footer() {
           </div>
           <div className={styles.section}>
             <h4>Urmărește-ne</h4>
-            <p>Linkuri social media</p>
+            <ul>
+              <li>
+                <a href="https://www.youtube.com/@tineriivorbesc" target="_blank" rel="noopener noreferrer">
+                  YouTube
+                </a>
+              </li>
+              <li>
+                <a href="https://www.instagram.com/tinerii_vorbesc/" target="_blank" rel="noopener noreferrer">
+                  Instagram
+                </a>
+              </li>
+              <li>
+                <a href="https://www.facebook.com/profile.php?id=100080974780801" target="_blank" rel="noopener noreferrer">
+                  Facebook
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
         <div className={styles.bottom}>
