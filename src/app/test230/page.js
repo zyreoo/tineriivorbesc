@@ -6,22 +6,71 @@ import { useState, useEffect, useRef } from 'react';
 export default function Test230() {
   const imageContainerRef = useRef(null);
   const [fields, setFields] = useState({
-    nume: { value: '', top: 210, left: 80, width: 200 },
-    prenume: { value: '', top: 240, left: 80, width: 200 },
-    cnp: { value: '', top: 219, left: 440, width: 300 },
-    strada: { value: '', top: 270, left: 80, width: 200 },
-    numar: { value: '', top: 270, left: 380, width: 45 },
-    initialaTatalui: { value: '', top: 210, left: 390, width: 30 },
-    email: { value: '', top: 255, left: 480, width: 250 },
-    judet: { value: '', top: 300, left: 335, width: 90 },
-    telefon: { value: '', top: 290, left: 480, width: 200 },
-    semnatura: { value: '', top: 975, left: 181, width: 180 },
-    localitate: { value: '', top: 330, left:82, width: 200 },
+    nume: { value: '', top: 320, left: 120, width: 200 },
+    prenume: { value: '', top: 365, left: 120, width: 200 },
+    cnp: { value: '', top: 339, left: 670, width: 300 },
+    strada: { value: '', top: 410, left: 120, width: 200 },
+    numar: { value: '', top: 410, left: 580, width: 45 },
+    initialaTatalui: { value: '', top: 320, left: 590, width: 30 },
+    email: { value: '', top: 390, left: 725, width: 250 },
+    judet: { value: '', top: 455, left: 510, width: 90 },
+    telefon: { value: '', top: 440, left: 725, width: 200 },
+    semnatura: { value: '', top: 1445, left: 271, width: 180 },
+    localitate: { value: '', top: 500, left:132, width: 200 },
   });
 
   const [signatureData, setSignatureData] = useState(null);
   const [editingField, setEditingField] = useState(null);
   const [showControls, setShowControls] = useState(false);
+  const [scaleFactor, setScaleFactor] = useState({ x: 1, y: 1 });
+  
+  // Original reference dimensions (the size positions were calibrated for)
+  // These should match the natural image dimensions or the size used for calibration
+  const referenceWidth = 800; // Adjust this to match your calibration size
+  const referenceHeight = 1133; // Adjust this to match your calibration size
+
+  // Calculate scale factor based on displayed image size
+  useEffect(() => {
+    const calculateScale = () => {
+      if (!imageContainerRef.current) return;
+      
+      const img = imageContainerRef.current.querySelector('img');
+      if (!img) return;
+      
+      // Wait for image to load
+      if (img.complete) {
+        const displayedWidth = img.offsetWidth;
+        const displayedHeight = img.offsetHeight;
+        
+        const scaleX = displayedWidth / referenceWidth;
+        const scaleY = displayedHeight / referenceHeight;
+        
+        setScaleFactor({ x: scaleX, y: scaleY });
+      } else {
+        img.onload = () => {
+          const displayedWidth = img.offsetWidth;
+          const displayedHeight = img.offsetHeight;
+          
+          const scaleX = displayedWidth / referenceWidth;
+          const scaleY = displayedHeight / referenceHeight;
+          
+          setScaleFactor({ x: scaleX, y: scaleY });
+        };
+      }
+    };
+
+    calculateScale();
+    
+    // Recalculate on window resize
+    window.addEventListener('resize', calculateScale);
+    // Also recalculate after a short delay to ensure image is rendered
+    const timeout = setTimeout(calculateScale, 100);
+    
+    return () => {
+      window.removeEventListener('resize', calculateScale);
+      clearTimeout(timeout);
+    };
+  }, []);
 
   // Load form data from sessionStorage on mount
   useEffect(() => {
@@ -86,10 +135,11 @@ export default function Test230() {
         img.src = '/tineriivorbesc.jpg';
       });
       
-      // Get the displayed image size from the DOM
+      // Get the displayed image size from the DOM (use fixed container width)
       const displayedImg = imageContainerRef.current?.querySelector('img');
-      const displayedWidth = displayedImg ? displayedImg.offsetWidth : img.width;
-      const displayedHeight = displayedImg ? displayedImg.offsetHeight : img.height;
+      const containerWidth = 1200; // Fixed container width
+      const displayedWidth = displayedImg ? displayedImg.offsetWidth : containerWidth;
+      const displayedHeight = displayedImg ? displayedImg.offsetHeight : (img.height * containerWidth / img.width);
       
       // Calculate scale factors
       const scaleX = img.width / displayedWidth;
@@ -102,19 +152,40 @@ export default function Test230() {
       // Draw the background image at full size
       ctx.drawImage(img, 0, 0, img.width, img.height);
       
-      // Try to load Arimo font, fallback to sans-serif if it fails
+      // Load and use Arimo font at exactly 12px (scaled to match image size)
+      const fontSize = 20 * scaleY;
+      
+      // Load Arimo font
       try {
+        // Try loading Arimo font file directly
         const fontUrl = 'https://fonts.gstatic.com/s/arimo/v28/P5sfzZCDf9_T_10c3i9MeHcyai_9Yg.woff2';
         const font = new FontFace('Arimo', `url(${fontUrl})`);
         await font.load();
         document.fonts.add(font);
+        
         // Wait for font to be ready
         await document.fonts.ready;
-        // Scale font size to match image scale
-        ctx.font = `${12 * scaleY}px Arimo, sans-serif`;
+        
+        // Set font to exactly 12px Arimo (scaled proportionally to maintain size on full image)
+        ctx.font = `${fontSize}px Arimo, sans-serif`;
       } catch (fontError) {
-        console.warn('Could not load Arimo font, using fallback:', fontError);
-        ctx.font = `${12 * scaleY}px sans-serif`;
+        console.warn('Could not load Arimo font file, trying Google Fonts API:', fontError);
+        
+        // Fallback: Load Arimo via Google Fonts CSS
+        try {
+          if (!document.querySelector('link[href*="fonts.googleapis.com"][href*="Arimo"]')) {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&display=swap';
+            document.head.appendChild(link);
+            // Wait for font to load
+            await new Promise(resolve => setTimeout(resolve, 1000));
+          }
+          ctx.font = `${fontSize}px "Arimo", sans-serif`;
+        } catch (e) {
+          console.warn('Could not load Arimo font, using sans-serif fallback:', e);
+          ctx.font = `${fontSize}px sans-serif`;
+        }
       }
       
       // Set text properties
@@ -161,9 +232,9 @@ export default function Test230() {
       }
       
       if (fields.cnp.value) {
-        // Draw CNP digits
+        // Draw CNP digits with increased spacing
         const cnpDigits = fields.cnp.value.toString().split('');
-        const digitSpacing = 13.5 * scaleX;
+        const digitSpacing = 38 * scaleX; // Increased from 13.5 to 18 for more space
         cnpDigits.forEach((digit, index) => {
           ctx.fillText(digit, scalePos(fields.cnp.left) + (index * digitSpacing), scalePos(fields.cnp.top, false));
         });
@@ -229,8 +300,26 @@ export default function Test230() {
   };
 
   return (
-    <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh', backgroundColor: '#f5f5f5' }}>
-      <div style={{ marginBottom: '1rem', display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap' }}>
+    <div style={{ 
+      padding: '2rem', 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      minHeight: '100vh', 
+      backgroundColor: '#f5f5f5',
+      overflowX: 'auto',
+      width: '100%'
+    }}>
+      <div style={{ 
+        marginBottom: '1rem', 
+        display: 'flex', 
+        gap: '1rem', 
+        alignItems: 'center', 
+        flexWrap: 'wrap',
+        width: '100%',
+        maxWidth: '1200px',
+        justifyContent: 'center'
+      }}>
         <button 
           onClick={() => setShowControls(!showControls)}
           style={{ padding: '0.5rem 1rem', backgroundColor: '#0070f3', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
@@ -250,13 +339,27 @@ export default function Test230() {
         )}
       </div>
 
-      <div ref={imageContainerRef} style={{ position: 'relative', display: 'inline-block' }}>
+      <div 
+        ref={imageContainerRef} 
+        style={{ 
+          position: 'relative', 
+          display: 'inline-block',
+          width: '1200px',
+          minWidth: '1200px',
+          maxWidth: '1200px'
+        }}
+      >
         <Image
           src="/tineriivorbesc.jpg"
           alt="Tinerii Vorbesc"
-          width={800}
-          height={600}
-          style={{ maxWidth: '100%', height: 'auto', display: 'block' }}
+          width={1200}
+          height={900}
+          style={{ 
+            width: '1200px',
+            height: 'auto',
+            display: 'block',
+            maxWidth: 'none'
+          }}
         />
         
         {/* Form Fields */}
