@@ -88,6 +88,10 @@ export default function Contact() {
                       <a href="https://www.facebook.com/profile.php?id=100080974780801" target="_blank" rel="noopener noreferrer">
                         Facebook
                       </a>
+                      {' • '}
+                      <a href="https://www.tiktok.com/@tineriivorbescofficial" target="_blank" rel="noopener noreferrer">
+                        TikTok
+                      </a>
                     </div>
                   </div>
                 </div>

@@ -42,6 +42,11 @@ export default function Footer() {
                   Facebook
                 </a>
               </li>
+              <li>
+                <a href="https://www.tiktok.com/@tineriivorbescofficial" target="_blank" rel="noopener noreferrer">
+                  TikTok
+                </a>
+              </li>
             </ul>
           </div>
         </div>

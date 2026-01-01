@@ -31,8 +31,11 @@ export default function Sponsorizari() {
               <h2>Formular 230</h2>
               <p>Dacă ești persoană fizică și vrei să ne ajuți, poți folosi formularul 230. 
               E simplu și rapid.</p>
-              <a href="#" className={styles.downloadBtn} download>
-                Descarcă formularul 230 →
+              <a href="/formular-230" className={styles.downloadBtn}>
+                Completează formularul online →
+              </a>
+              <a href="/230tineriivorbesc.pdf" className={styles.downloadBtn} download style={{marginTop: '0.5rem', display: 'block'}}>
+                Sau descarcă PDF-ul →
               </a>
             </div>
             <div className={styles.methodCard}>
@@ -49,6 +52,40 @@ export default function Sponsorizari() {
                 Descarcă contractul →
               </a>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.section}>
+        <div className={styles.container}>
+          <div className={styles.bankingSection}>
+            <h2>Date bancare</h2>
+            <div className={styles.bankingInfo}>
+              <div className={styles.bankingItem}>
+                <h3>🏦 Nume organizație</h3>
+                <p className={styles.bankingValue}>Asociația Tinerii Vorbesc</p>
+              </div>
+              <div className={styles.bankingItem}>
+                <h3>💳 IBAN</h3>
+                <p className={styles.bankingValue}>RO66BTRLRONCRT0CX1004301</p>
+                <button 
+                  onClick={() => {
+                    navigator.clipboard.writeText('RO66BTRLRONCRT0CX1004301');
+                    alert('IBAN copiat în clipboard!');
+                  }}
+                  className={styles.copyBtn}
+                >
+                  Copiază IBAN
+                </button>
+              </div>
+              <div className={styles.bankingItem}>
+                <h3>🔢 CUI</h3>
+                <p className={styles.bankingValue}>51197056</p>
+              </div>
+            </div>
+            <p className={styles.bankingNote}>
+              Poți face transfer direct în contul nostru bancar folosind datele de mai sus.
+            </p>
           </div>
         </div>
       </section>

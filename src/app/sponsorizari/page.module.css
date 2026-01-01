@@ -87,6 +87,80 @@
   box-shadow: 0 4px 12px rgba(244, 196, 48, 0.3);
 }
 
+.bankingSection {
+  background: var(--card-bg);
+  padding: 3rem;
+  border-radius: 1rem;
+  margin-bottom: 2rem;
+  border: 2px solid var(--primary);
+}
+
+.bankingSection h2 {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  color: var(--text-primary);
+}
+
+.bankingInfo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.bankingItem {
+  background: var(--background);
+  padding: 2rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border);
+  text-align: center;
+}
+
+.bankingItem h3 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.bankingValue {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  word-break: break-all;
+  margin-bottom: 1rem;
+  font-family: 'Courier New', monospace;
+}
+
+.copyBtn {
+  display: inline-block;
+  padding: 0.5rem 1.5rem;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 0.5rem;
+}
+
+.copyBtn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(244, 196, 48, 0.3);
+}
+
+.bankingNote {
+  text-align: center;
+  font-size: 1rem;
+  color: var(--text-secondary);
+  font-style: italic;
+  margin-top: 1rem;
+}
+
 .benefitsSection {
   background: var(--card-bg);
   padding: 3rem;
@@ -147,6 +221,18 @@
 
   .supportMethods {
     grid-template-columns: 1fr;
+  }
+
+  .bankingSection {
+    padding: 2rem 1.5rem;
+  }
+
+  .bankingInfo {
+    grid-template-columns: 1fr;
+  }
+
+  .bankingSection h2 {
+    font-size: 2rem;
   }
 
   .benefitsSection {
