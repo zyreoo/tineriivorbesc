@@ -3,7 +3,7 @@
 }
 
 .hero {
-  background: linear-gradient(135deg, #f4c430 0%, #d4a017 100%);
+  background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
   color: white;
   padding: 4rem 0;
   text-align: center;
@@ -243,6 +243,10 @@
   margin-bottom: 1rem;
   overflow: hidden;
   position: relative;
+  touch-action: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .signatureCanvas {
@@ -252,6 +256,12 @@
   height: 200px;
   cursor: crosshair;
   touch-action: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  position: relative;
+  margin: 0;
+  padding: 0;
 }
 
 .clearSignatureBtn {
@@ -271,28 +281,6 @@
   transform: translateY(-2px);
 }
 
-.signaturePreview {
-  margin-top: 1.5rem;
-  padding: 1.5rem;
-  background: rgba(244, 196, 48, 0.1);
-  border-radius: 0.5rem;
-  border: 2px solid var(--primary);
-}
-
-.signaturePreview p {
-  color: var(--text-primary);
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
-
-.signatureImage {
-  max-width: 100%;
-  height: auto;
-  border: 1px solid var(--border);
-  border-radius: 0.25rem;
-  background: white;
-  padding: 0.5rem;
-}
 
 @media (max-width: 768px) {
   .signatureCanvas {

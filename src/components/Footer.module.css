@@ -21,13 +21,13 @@
 .section h3 {
   font-size: 1.5rem;
   margin-bottom: 0.5rem;
-  color: #f4c430;
+  color: #D4AF37;
 }
 
 .section h4 {
   font-size: 1.1rem;
   margin-bottom: 1rem;
-  color: #f4c430;
+  color: #D4AF37;
 }
 
 .section p {
@@ -53,11 +53,11 @@
 }
 
 .section ul li a:hover {
-  color: #f4c430;
+  color: #D4AF37;
 }
 
 .bottom {
-  border-top: 1px solid rgba(244, 196, 48, 0.3);
+  border-top: 1px solid rgba(212, 175, 55, 0.3);
   padding-top: 1.5rem;
   text-align: center;
   color: #ffffff;
