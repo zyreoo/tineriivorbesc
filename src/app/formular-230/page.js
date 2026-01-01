@@ -21,7 +21,7 @@ export default function Formular230() {
     judet: '',
     strada: '',
     numar: '',
-    perioada: '', // '1' sau '2'
+    perioada: '',
     acordGDPR: false,
     acordComunicare: false,
     acordEmail: false
@@ -72,7 +72,14 @@ export default function Formular230() {
       });
       console.log('=======================');
       
-      alert(`Găsit ${fieldList.length} câmpuri în PDF. Verifică consola pentru lista completă.`);
+      const pages = pdfDoc.getPages();
+      const firstPage = pages[0];
+      const { width, height } = firstPage.getSize();
+      console.log(`PDF Dimensions: ${width} x ${height} points`);
+      console.log('Note: PDF coordinates start from bottom-left (0,0)');
+      console.log('Top-right corner is at:', width, height);
+      
+      alert(`Găsit ${fieldList.length} câmpuri în PDF. Verifică consola pentru lista completă și dimensiunile PDF.`);
     } catch (error) {
       console.error('Error listing PDF fields:', error);
       alert('Eroare la citirea câmpurilor PDF. Verifică consola.');
@@ -82,19 +89,16 @@ export default function Formular230() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Check if signature is required and provided
     if (isSignatureEmpty) {
       alert('Vă rugăm să adăugați semnătura!');
       return;
     }
     
-    // Try to generate and download the PDF
     try {
       await fillPDFForm();
     } catch (error) {
       console.error('Error generating PDF:', error);
       alert('Eroare la generarea PDF-ului. Verifică consola pentru detalii.');
-      // Only fallback to text file if PDF generation completely fails
       const summary = generateSummary();
       downloadTextFile(summary);
     }
@@ -143,7 +147,6 @@ INSTRUCȚIUNI:
   };
 
   const downloadTextFile = async (summary) => {
-    // Fallback: download text file and signature image
     const textBlob = new Blob([summary], { type: 'text/plain;charset=utf-8' });
     const textUrl = URL.createObjectURL(textBlob);
     const textLink = document.createElement('a');
@@ -168,323 +171,369 @@ INSTRUCȚIUNI:
   };
 
   const fillPDFForm = async () => {
-    // Fetch the PDF template
-    const pdfUrl = '/230tineriivorbesc.pdf';
-    const existingPdfBytes = await fetch(pdfUrl).then(res => res.arrayBuffer());
-    
-    // Load the PDF
-    const pdfDoc = await PDFDocument.load(existingPdfBytes);
-    const pages = pdfDoc.getPages();
-    const firstPage = pages[0];
-    const { width, height } = firstPage.getSize();
-    
-    // Try to get form fields first
-    let hasFormFields = false;
     try {
-      const form = pdfDoc.getForm();
-      const fields = form.getFields();
+      console.log('Step 1: Loading form template image...');
       
-      if (fields.length > 0) {
-        hasFormFields = true;
-        console.log('Found form fields, attempting to fill...');
+      const imageUrl = '/tineriivorbesc.jpg';
+      const imageBytes = await fetch(imageUrl).then(res => res.arrayBuffer());
+      
+      console.log('Step 2: Creating PDF with form template as background...');
+      const pdfDoc = await PDFDocument.create();
+      
+      let backgroundImage;
+      try {
+        backgroundImage = await pdfDoc.embedJpg(imageBytes);
+        console.log('JPG image embedded successfully');
+      } catch (e) {
+        backgroundImage = await pdfDoc.embedPng(imageBytes);
+        console.log('PNG image embedded successfully');
+      }
+      
+      const { width, height } = backgroundImage.scale(1);
+      console.log('PDF page dimensions:', width, 'x', height);
+      
+      const img = new Image();
+      img.src = imageUrl;
+      await new Promise((resolve) => {
+        img.onload = resolve;
+      });
+      const naturalWidth = img.naturalWidth;
+      const naturalHeight = img.naturalHeight;
+      console.log('Image natural dimensions:', naturalWidth, 'x', naturalHeight);
+      
+      const scaleX = width / naturalWidth;
+      const scaleY = height / naturalHeight;
+      console.log('Scale factors - X:', scaleX.toFixed(4), 'Y:', scaleY.toFixed(4));
+      
+      if (Math.abs(scaleX - 1.0) > 0.01 || Math.abs(scaleY - 1.0) > 0.01) {
+        console.warn('WARNING: PDF dimensions differ from natural image size. Coordinates will be scaled.');
+      }
+      
+      const firstPage = pdfDoc.addPage([width, height]);
+      
+      firstPage.drawImage(backgroundImage, {
+        x: 0,
+        y: 0,
+        width: width,
+        height: height,
+      });
+      
+      console.log('Step 3: Adding text on top of form template...');
+      console.log('PDF dimensions:', width, 'x', height);
+      
+      let formFieldsFilled = false;
+      try {
+        const form = pdfDoc.getForm();
+        const fields = form.getFields();
         
-        fields.forEach(field => {
-          const fieldName = field.getName().toLowerCase();
-          const fieldType = field.constructor.name;
+        if (fields.length > 0) {
+          console.log(`Found ${fields.length} form fields, attempting to fill...`);
+          
+          const fieldMapping = {
+            nume: ['nume', 'name', 'surname', 'lastname', 'numele', 'nume_', 'nume.'],
+            prenume: ['prenume', 'firstname', 'prenumele', 'prenume_', 'prenume.'],
+            initialaTatalui: ['initiala', 'initial', 'tata', 'father', 'initiala_tatalui', 'initiala.'],
+            cnp: ['cnp', 'cod_numeric', 'codnumeric', 'cod_numeric_personal', 'cnp_', 'cnp.'],
+            email: ['email', 'e-mail', 'mail', 'email_', 'email.'],
+            telefon: ['telefon', 'phone', 'tel', 'telefon_', 'telefon.', 'telefon_mobil'],
+            localitate: ['localitate', 'city', 'oras', 'municipiu', 'localitate_', 'localitate.'],
+            judet: ['judet', 'județ', 'county', 'sector', 'judet_', 'judet.', 'judetul'],
+            strada: ['strada', 'stradă', 'street', 'adresa', 'strada_', 'strada.'],
+            numar: ['numar', 'număr', 'number', 'nr', 'numar_', 'numar.', 'nr_'],
+            procent: ['procent', 'percent', 'procent_', 'procent.', '%'],
+            cui: ['cui', 'cod_fiscal', 'codfiscal', 'cui_', 'cui.', 'cod_identificare'],
+            denumire: ['denumire', 'name_entity', 'nume_entitate', 'denumire_', 'denumire.'],
+            iban: ['iban', 'cont_bancar', 'contbancar', 'iban_', 'iban.', 'account'],
+          };
+          
+          const findMatchingField = (fieldName, searchTerms) => {
+            const lowerFieldName = fieldName.toLowerCase();
+            return searchTerms.some(term => lowerFieldName.includes(term));
+          };
+          
+          fields.forEach(field => {
+            const fieldName = field.getName();
+            const fieldType = field.constructor.name;
+            
+            try {
+              if (fieldType === 'PDFTextField') {
+                const textField = form.getTextField(fieldName);
+                
+                if (findMatchingField(fieldName, fieldMapping.nume)) {
+                  textField.setText(formData.nume || '');
+                  formFieldsFilled = true;
+                } else if (findMatchingField(fieldName, fieldMapping.prenume)) {
+                  textField.setText(formData.prenume || '');
+                  formFieldsFilled = true;
+                } else if (findMatchingField(fieldName, fieldMapping.initialaTatalui)) {
+                  textField.setText(formData.initialaTatalui || '');
+                  formFieldsFilled = true;
+                } else if (findMatchingField(fieldName, fieldMapping.cnp)) {
+                  textField.setText(formData.cnp || '');
+                  formFieldsFilled = true;
+                } else if (findMatchingField(fieldName, fieldMapping.email)) {
+                  textField.setText(formData.email || '');
+                  formFieldsFilled = true;
+                } else if (findMatchingField(fieldName, fieldMapping.telefon)) {
+                  textField.setText(formData.telefon || '');
+                  formFieldsFilled = true;
+                } else if (findMatchingField(fieldName, fieldMapping.localitate)) {
+                  textField.setText(formData.localitate || '');
+                  formFieldsFilled = true;
+                } else if (findMatchingField(fieldName, fieldMapping.judet)) {
+                  textField.setText(formData.judet || '');
+                  formFieldsFilled = true;
+                } else if (findMatchingField(fieldName, fieldMapping.strada)) {
+                  textField.setText(formData.strada || '');
+                  formFieldsFilled = true;
+                } else if (findMatchingField(fieldName, fieldMapping.numar)) {
+                  textField.setText(formData.numar || '');
+                  formFieldsFilled = true;
+                } else if (findMatchingField(fieldName, fieldMapping.procent)) {
+                  textField.setText('3.5');
+                  formFieldsFilled = true;
+                } else if (findMatchingField(fieldName, fieldMapping.cui)) {
+                  textField.setText('51197056');
+                  formFieldsFilled = true;
+                } else if (findMatchingField(fieldName, fieldMapping.denumire)) {
+                  textField.setText('Asociația Tinerii Vorbesc');
+                  formFieldsFilled = true;
+                } else if (findMatchingField(fieldName, fieldMapping.iban)) {
+                  textField.setText('RO66BTRLRONCRT0CX1004301');
+                  formFieldsFilled = true;
+                }
+              } else if (fieldType === 'PDFCheckBox') {
+                const checkBox = form.getCheckBox(fieldName);
+                const lowerFieldName = fieldName.toLowerCase();
+                
+                if (lowerFieldName.includes('nonprofit') || lowerFieldName.includes('entitate')) {
+                  checkBox.check();
+                  formFieldsFilled = true;
+                }
+                
+                if ((lowerFieldName.includes('2') && lowerFieldName.includes('ani')) || 
+                    (lowerFieldName.includes('2') && lowerFieldName.includes('year'))) {
+                  if (formData.perioada === '2') {
+                    checkBox.check();
+                    formFieldsFilled = true;
+                  }
+                } else if ((lowerFieldName.includes('1') && lowerFieldName.includes('an')) ||
+                           (lowerFieldName.includes('1') && lowerFieldName.includes('year'))) {
+                  if (formData.perioada === '1') {
+                    checkBox.check();
+                    formFieldsFilled = true;
+                  }
+                }
+                
+                if (lowerFieldName.includes('acord') || lowerFieldName.includes('agree') || 
+                    lowerFieldName.includes('gdpr') || lowerFieldName.includes('comunicare')) {
+                  if (formData.acordGDPR || formData.acordComunicare) {
+                    checkBox.check();
+                    formFieldsFilled = true;
+                  }
+                }
+              } else if (fieldType === 'PDFRadioGroup') {
+                const radioGroup = form.getRadioGroup(fieldName);
+                if (formData.perioada === '1') {
+                  try {
+                    radioGroup.select('1');
+                    formFieldsFilled = true;
+                  } catch (e) {
+                    try {
+                      radioGroup.select('1an');
+                    } catch (e2) {
+                      console.log(`Could not set radio group ${fieldName}`);
+                    }
+                  }
+                } else if (formData.perioada === '2') {
+                  try {
+                    radioGroup.select('2');
+                    formFieldsFilled = true;
+                  } catch (e) {
+                    try {
+                      radioGroup.select('2ani');
+                    } catch (e2) {
+                      console.log(`Could not set radio group ${fieldName}`);
+                    }
+                  }
+                }
+              }
+            } catch (e) {
+              console.log(`Error filling field "${fieldName}":`, e);
+            }
+          });
+          
+          if (formFieldsFilled) {
+            form.updateFieldAppearances();
+            console.log('Form fields filled successfully');
+          }
+        }
+      } catch (e) {
+        console.log('No form fields found or error accessing form:', e);
+      }
+      
+      console.log('PDF has no form fields. Adding text on top of existing PDF template.');
+      console.log('PDF dimensions:', width, 'x', height);
+      console.log('Original PDF background and form structure are preserved.');
+      
+      const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+      const fontSize = 13;
+      const smallFontSize = 12;
+      
+      const replaceRomanianChars = (text) => {
+        if (!text) return '';
+        return text
+          .replace(/ă/g, 'a').replace(/Ă/g, 'A')
+          .replace(/â/g, 'a').replace(/Â/g, 'A')
+          .replace(/î/g, 'i').replace(/Î/g, 'I')
+          .replace(/ș/g, 's').replace(/Ș/g, 'S')
+          .replace(/ț/g, 't').replace(/Ț/g, 'T');
+      };
+      
+      const drawTextAt = (text, x, y, size = fontSize, logLabel = '') => {
+        if (text) {
+          firstPage.drawText(text, { x, y, size, font });
+          if (logLabel) {
+            console.log(`${logLabel}: "${text}" at (${x}, ${y})`);
+          }
+        }
+      };
+      
+      const drawDigitsInBoxes = (digits, startX, y, digitSpacing = 13.5, size = fontSize) => {
+        if (!digits) return;
+        const digitArray = digits.toString().split('');
+        digitArray.forEach((digit, index) => {
+          firstPage.drawText(digit, {
+            x: startX + (index * digitSpacing),
+            y: y,
+            size: size,
+            font: font,
+          });
+        });
+      };
+      
+      const scaleCoord = (coord, useX = true) => {
+        const scale = useX ? scaleX : scaleY;
+        return coord * scale;
+      };
+      
+      const numeX = scaleCoord(295.7);
+      const numeY = height - scaleCoord(1602.7, false);
+      drawTextAt(replaceRomanianChars(formData.nume?.toUpperCase() || ''), numeX, numeY, fontSize, 'Nume');
+      
+      const prenumeX = scaleCoord(323.3);
+      const prenumeY = height - scaleCoord(1536.5, false);
+      drawTextAt(replaceRomanianChars(formData.prenume?.toUpperCase() || ''), prenumeX, prenumeY, fontSize, 'Prenume');
+      
+      if (formData.initialaTatalui) {
+        const initialaX = scaleCoord(310);
+        drawTextAt(replaceRomanianChars(formData.initialaTatalui.toUpperCase()), initialaX, numeY, fontSize, 'Initiala');
+      }
+      
+      if (formData.cnp) {
+        const cnpX = scaleCoord(803.3);
+        const cnpY = height - scaleCoord(1555.3, false);
+        const cnpSpacing = scaleCoord(14);
+        drawDigitsInBoxes(formData.cnp, cnpX, cnpY, cnpSpacing, fontSize);
+        console.log(`CNP: "${formData.cnp}" starting at (${cnpX.toFixed(1)}, ${cnpY.toFixed(1)})`);
+      }
+      
+      const emailX = scaleCoord(926.9);
+      const emailY = height - scaleCoord(1502.3, false);
+      drawTextAt(formData.email || '', emailX, emailY, smallFontSize, 'Email');
+      
+      const stradaX = scaleCoord(293.5);
+      const stradaY = height - scaleCoord(1482.5, false);
+      drawTextAt(replaceRomanianChars(formData.strada || ''), stradaX, stradaY, fontSize, 'Strada');
+      
+      const numarX = scaleCoord(715.0);
+      const numarY = height - scaleCoord(1483.6, false);
+      drawTextAt(replaceRomanianChars(formData.numar || ''), numarX, numarY, fontSize, 'Numar');
+      
+      const telefonX = scaleCoord(962.2);
+      const telefonY = height - scaleCoord(1444.9, false);
+      drawTextAt(formData.telefon || '', telefonX, telefonY, fontSize, 'Telefon');
+      
+      if (formData.judet) {
+        const judetX = scaleCoord(500);
+        const judetY = height - scaleCoord(1460, false);
+        drawTextAt(replaceRomanianChars(formData.judet), judetX, judetY, fontSize, 'Judet');
+      }
+      
+      if (formData.localitate) {
+        const localitateX = scaleCoord(293.5);
+        const localitateY = height - scaleCoord(1440, false);
+        drawTextAt(replaceRomanianChars(formData.localitate), localitateX, localitateY, fontSize, 'Localitate');
+      }
+      
+      const checkbox1Y = height - scaleCoord(390, false);
+      drawTextAt('X', scaleCoord(100), checkbox1Y, 14, 'Checkbox nonprofit');
+      
+      if (formData.perioada === '2') {
+        const checkbox2Y = height - scaleCoord(410, false);
+        drawTextAt('X', scaleCoord(100), checkbox2Y, 14, 'Checkbox 2 ani');
+      }
+      
+      if (formData.acordComunicare) {
+        const checkbox3Y = height - scaleCoord(510, false);
+        drawTextAt('X', scaleCoord(65), checkbox3Y, 14, 'Checkbox acord comunicare');
+      }
+      
+      if (signatureData) {
+        try {
+          const signatureImageBytes = await fetch(signatureData).then(res => res.arrayBuffer());
+          let signatureImage;
           
           try {
-            if (fieldType === 'PDFTextField') {
-              const textField = form.getTextField(field.getName());
-              
-              if (fieldName.includes('nume') && !fieldName.includes('prenume')) {
-                textField.setText(formData.nume || '');
-              } else if (fieldName.includes('prenume')) {
-                textField.setText(formData.prenume || '');
-              } else if (fieldName.includes('initiala') || fieldName.includes('initial')) {
-                textField.setText(formData.initialaTatalui || '');
-              } else if (fieldName.includes('cnp') || (fieldName.includes('cod') && fieldName.includes('numeric'))) {
-                textField.setText(formData.cnp || '');
-              } else if (fieldName.includes('email') || fieldName.includes('e-mail')) {
-                textField.setText(formData.email || '');
-              } else if (fieldName.includes('telefon') || fieldName.includes('phone')) {
-                textField.setText(formData.telefon || '');
-              } else if (fieldName.includes('localitate') || fieldName.includes('city')) {
-                textField.setText(formData.localitate || '');
-              } else if (fieldName.includes('judet') || fieldName.includes('sector') || fieldName.includes('county')) {
-                textField.setText(formData.judet || '');
-              } else if (fieldName.includes('strada') || fieldName.includes('street') || fieldName.includes('stradă')) {
-                textField.setText(formData.strada || '');
-              } else if (fieldName.includes('numar') || fieldName.includes('number') || fieldName.includes('număr')) {
-                textField.setText(formData.numar || '');
-              } else if (fieldName.includes('procent') || fieldName.includes('percent')) {
-                textField.setText('3.5');
-              }
-            } else if (fieldType === 'PDFCheckBox') {
-              const checkBox = form.getCheckBox(field.getName());
-              
-              if (fieldName.includes('acord') || fieldName.includes('agree')) {
-                if (formData.acordGDPR || formData.acordComunicare) {
-                  checkBox.check();
-                }
-              }
-              if ((fieldName.includes('2') && fieldName.includes('ani')) || fieldName.includes('year')) {
-                if (formData.perioada === '2') {
-                  checkBox.check();
-                }
-              }
-            }
-          } catch (e) {
-            console.log(`Could not fill field: ${field.getName()}`, e);
+            signatureImage = await pdfDoc.embedPng(signatureImageBytes);
+          } catch {
+            signatureImage = await pdfDoc.embedJpg(signatureImageBytes);
           }
-        });
-        
-        form.updateFieldAppearances();
-      }
-    } catch (e) {
-      console.log('No form fields found or error accessing form:', e);
-    }
-    
-    // If no form fields or form fields didn't work, add text directly
-    // Coordinates based on standard Form 230 ANAF layout (A4: 595 x 842 points)
-    console.log('Adding text directly to PDF at specific coordinates...');
-    console.log('PDF dimensions:', width, 'x', height);
-    
-    // Load a font that supports Romanian characters
-    // StandardFonts.Helvetica doesn't support all Romanian chars, so we'll use a workaround
-    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-    const fontSize = 9;
-    
-    // Helper function to replace Romanian characters with ASCII equivalents for PDF
-    const replaceRomanianChars = (text) => {
-      return text
-        .replace(/ă/g, 'a').replace(/Ă/g, 'A')
-        .replace(/â/g, 'a').replace(/Â/g, 'A')
-        .replace(/î/g, 'i').replace(/Î/g, 'I')
-        .replace(/ș/g, 's').replace(/Ș/g, 'S')
-        .replace(/ț/g, 't').replace(/Ț/g, 'T');
-    };
-    
-    // Section I: Date de identificare a contribuabilului
-    // Row 1: Nume, Inițiala tatălui, Prenume
-    if (formData.nume) {
-      firstPage.drawText(replaceRomanianChars(formData.nume.toUpperCase()), {
-        x: 55,
-        y: height - 195,
-        size: fontSize,
-        font: font,
-      });
-    }
-    
-    if (formData.initialaTatalui) {
-      firstPage.drawText(replaceRomanianChars(formData.initialaTatalui.toUpperCase()), {
-        x: 235,
-        y: height - 195,
-        size: fontSize,
-        font: font,
-      });
-    }
-    
-    if (formData.prenume) {
-      firstPage.drawText(replaceRomanianChars(formData.prenume.toUpperCase()), {
-        x: 285,
-        y: height - 195,
-        size: fontSize,
-        font: font,
-      });
-    }
-    
-    // Row 1 (right side): CNP - each digit in separate box
-    if (formData.cnp) {
-      const cnpDigits = formData.cnp.split('');
-      let cnpX = 395;
-      cnpDigits.forEach((digit, index) => {
-        firstPage.drawText(digit, {
-          x: cnpX + (index * 13.5),
-          y: height - 195,
-          size: fontSize,
-          font: font,
-        });
-      });
-    }
-    
-    // Row 2: Email
-    if (formData.email) {
-      firstPage.drawText(formData.email, {
-        x: 285,
-        y: height - 215,
-        size: fontSize - 1,
-        font: font,
-      });
-    }
-    
-    // Row 3: Stradă, Număr, Telefon
-    if (formData.strada) {
-      firstPage.drawText(replaceRomanianChars(formData.strada), {
-        x: 55,
-        y: height - 235,
-        size: fontSize,
-        font: font,
-      });
-    }
-    
-    if (formData.numar) {
-      firstPage.drawText(replaceRomanianChars(formData.numar), {
-        x: 235,
-        y: height - 235,
-        size: fontSize,
-        font: font,
-      });
-    }
-    
-    if (formData.telefon) {
-      firstPage.drawText(formData.telefon, {
-        x: 310,
-        y: height - 235,
-        size: fontSize,
-        font: font,
-      });
-    }
-    
-    // Row 5: Județ/Sector, Localitate
-    if (formData.judet) {
-      firstPage.drawText(replaceRomanianChars(formData.judet), {
-        x: 235,
-        y: height - 275,
-        size: fontSize,
-        font: font,
-      });
-    }
-    
-    if (formData.localitate) {
-      firstPage.drawText(replaceRomanianChars(formData.localitate), {
-        x: 55,
-        y: height - 295,
-        size: fontSize,
-        font: font,
-      });
-    }
-    
-    // Section II: Destinația sumei
-    // Checkbox for nonprofit entity (pre-checked)
-    firstPage.drawText('X', {
-      x: 104,
-      y: height - 405,
-      size: 10,
-      font: font,
-    });
-    
-    // Checkbox for 2 years option (if selected)
-    if (formData.perioada === '2') {
-      firstPage.drawText('X', {
-        x: 104,
-        y: height - 425,
-        size: 10,
-        font: font,
-      });
-    }
-    
-    // CUI (Cod de identificare fiscală)
-    const cui = '51197056';
-    let cuiX = 310;
-    cui.split('').forEach((digit, index) => {
-      firstPage.drawText(digit, {
-        x: cuiX + (index * 13.5),
-        y: height - 445,
-        size: fontSize,
-        font: font,
-      });
-    });
-    
-    // Denumire entitate nonprofit (replace Romanian chars for PDF compatibility)
-    firstPage.drawText(replaceRomanianChars('Asociația Tinerii Vorbesc'), {
-      x: 150,
-      y: height - 465,
-      size: fontSize,
-      font: font,
-    });
-    
-    // Cont bancar (IBAN)
-    const iban = 'RO66BTRLRONCRT0CX1004301';
-    firstPage.drawText(iban, {
-      x: 135,
-      y: height - 485,
-      size: fontSize - 1,
-      font: font,
-    });
-    
-    // Procent (3.5)
-    firstPage.drawText('3', {
-      x: 250,
-      y: height - 505,
-      size: fontSize,
-      font: font,
-    });
-    firstPage.drawText(',', {
-      x: 257,
-      y: height - 505,
-      size: fontSize,
-      font: font,
-    });
-    firstPage.drawText('5', {
-      x: 265,
-      y: height - 505,
-      size: fontSize,
-      font: font,
-    });
-    
-    // Checkbox for agreement to share data
-    if (formData.acordComunicare) {
-      firstPage.drawText('X', {
-        x: 70,
-        y: height - 530,
-        size: 10,
-        font: font,
-      });
-    }
-    
-    // Add signature image at the signature field location
-    if (signatureData) {
-      try {
-        const signatureImageBytes = await fetch(signatureData).then(res => res.arrayBuffer());
-        let signatureImage;
-        
-        try {
-          signatureImage = await pdfDoc.embedPng(signatureImageBytes);
-        } catch {
-          signatureImage = await pdfDoc.embedJpg(signatureImageBytes);
+          
+          const signatureWidth = 140;
+          const signatureHeight = (signatureImage.height * signatureWidth) / signatureImage.width;
+          
+          const semnaturaX = scaleCoord(454.6);
+          const semnaturaY = height - scaleCoord(233.4, false);
+          
+          firstPage.drawImage(signatureImage, {
+            x: semnaturaX,
+            y: semnaturaY,
+            width: signatureWidth,
+            height: signatureHeight,
+          });
+          
+          console.log(`Signature added at (${semnaturaX.toFixed(1)}, ${semnaturaY.toFixed(1)}) with size ${signatureWidth}x${signatureHeight}`);
+        } catch (e) {
+          console.error('Error adding signature to PDF:', e);
         }
-        
-        // Position signature in the signature field (bottom section)
-        const signatureWidth = 100;
-        const signatureHeight = (signatureImage.height * signatureWidth) / signatureImage.width;
-        
-        // Signature field is typically at the bottom of the form
-        firstPage.drawImage(signatureImage, {
-          x: 80,
-          y: height - 700, // Adjust based on actual signature field position
-          width: signatureWidth,
-          height: signatureHeight,
-        });
-      } catch (e) {
-        console.error('Error adding signature to PDF:', e);
+      } else {
+        console.log('No signature provided - skipping signature placement');
       }
+      
+      console.log('Saving PDF with original content preserved...');
+      const pdfBytes = await pdfDoc.save();
+      console.log('PDF saved, size:', pdfBytes.length, 'bytes');
+      
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `Formular_230_Completat_${formData.nume || 'User'}_${formData.prenume || 'Name'}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      
+      console.log('PDF generated successfully with original template preserved.');
+      console.log('If PDF appears blank, the original PDF might have a structure issue.');
+      alert('Formularul a fost generat și descărcat cu succes!');
+      
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Eroare la generarea PDF-ului. Verifică consola pentru detalii.');
+      throw error;
     }
-    
-    // Save the PDF
-    const pdfBytes = await pdfDoc.save();
-    
-    // Download the filled PDF
-    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `Formular_230_Completat_${formData.nume}_${formData.prenume}.pdf`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-    
-    // PDF downloaded successfully - no alert needed as download happens automatically
   };
 
   return (
