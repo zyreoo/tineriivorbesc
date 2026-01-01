@@ -94,14 +94,15 @@ export default function Formular230() {
       return;
     }
     
-    try {
-      await fillPDFForm();
-    } catch (error) {
-      console.error('Error generating PDF:', error);
-      alert('Eroare la generarea PDF-ului. Verifică consola pentru detalii.');
-      const summary = generateSummary();
-      downloadTextFile(summary);
-    }
+    // Save form data to sessionStorage for test230 page
+    const dataToPass = {
+      ...formData,
+      signatureData: signatureData
+    };
+    sessionStorage.setItem('form230Data', JSON.stringify(dataToPass));
+    
+    // Redirect to test230 page
+    window.location.href = '/test230';
   };
 
   const generateSummary = () => {
