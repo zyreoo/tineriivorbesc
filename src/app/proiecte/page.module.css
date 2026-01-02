@@ -167,6 +167,17 @@
   border-radius: 0.5rem;
 }
 
+.galleryImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.galleryItem:hover .galleryImage {
+  transform: scale(1.05);
+}
+
 .galleryPlaceholder {
   width: 100%;
   height: 100%;

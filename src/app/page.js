@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import styles from './page.module.css';
 
 export default function Home() {
@@ -46,17 +47,62 @@ export default function Home() {
             Câteva momente din evenimentele și proiectele noastre – oameni reali, conversații reale, impact real.
           </p>
           <div className={styles.galleryGrid}>
-            <div className={styles.galleryPlaceholder}>
-              <p>Galerie foto</p>
+            <div className={styles.galleryItem}>
+              <Image
+                src="/photos/used/WhatsApp Image 2025-12-26 at 1.09.44 PM (1).jpeg"
+                alt="Moment din eveniment"
+                width={400}
+                height={300}
+                className={styles.galleryImage}
+              />
               <Link href="/proiecte" className={styles.galleryLink}>
                 Vezi galeria completă →
               </Link>
             </div>
-            <div className={styles.galleryPlaceholder}>
-              <p>Galerie foto</p>
+            <div className={styles.galleryItem}>
+              <Image
+                src="/photos/used/WhatsApp Image 2025-12-26 at 1.09.45 PM (1).jpeg"
+                alt="Moment din eveniment"
+                width={400}
+                height={300}
+                className={styles.galleryImage}
+              />
             </div>
-            <div className={styles.galleryPlaceholder}>
-              <p>Galerie foto</p>
+            <div className={styles.galleryItem}>
+              <Image
+                src="/photos/used/WhatsApp Image 2025-12-26 at 1.09.46 PM (1).jpeg"
+                alt="Moment din eveniment"
+                width={400}
+                height={300}
+                className={styles.galleryImage}
+              />
+            </div>
+            <div className={styles.galleryItem}>
+              <Image
+                src="/photos/used/WhatsApp Image 2025-12-26 at 1.09.44 PM (6).jpeg"
+                alt="Moment din eveniment"
+                width={400}
+                height={300}
+                className={styles.galleryImage}
+              />
+            </div>
+            <div className={styles.galleryItem}>
+              <Image
+                src="/photos/used/WhatsApp Image 2025-12-26 at 1.09.45 PM (3).jpeg"
+                alt="Moment din eveniment"
+                width={400}
+                height={300}
+                className={styles.galleryImage}
+              />
+            </div>
+            <div className={styles.galleryItem}>
+              <Image
+                src="/photos/used/WhatsApp Image 2025-12-26 at 1.09.46 PM (3).jpeg"
+                alt="Moment din eveniment"
+                width={400}
+                height={300}
+                className={styles.galleryImage}
+              />
             </div>
           </div>
         </div>

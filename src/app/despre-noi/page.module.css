@@ -75,6 +75,15 @@
   justify-content: center;
 }
 
+.carinaPhoto {
+  width: 100%;
+  max-width: 400px;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
 .imagePlaceholder {
   width: 100%;
   max-width: 400px;

@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import styles from './page.module.css';
 
 const handleDownload = (filename) => {
@@ -66,9 +67,13 @@ export default function DespreNoi() {
                 </p>
               </div>
               <div className={styles.carinaImage}>
-                <div className={styles.imagePlaceholder}>
-                  <p>Foto Carina</p>
-                </div>
+                <Image
+                  src="/photos/used/carina-photo.jpeg"
+                  alt="Carina Tănăselea"
+                  width={400}
+                  height={400}
+                  className={styles.carinaPhoto}
+                />
               </div>
             </div>
           </div>
