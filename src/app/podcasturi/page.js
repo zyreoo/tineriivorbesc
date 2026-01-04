@@ -1,6 +1,55 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import styles from './page.module.css';
 
 export default function Podcasturi() {
+  const [videos, setVideos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchVideos = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        
+        const response = await fetch('/api/youtube-videos');
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to fetch videos');
+        }
+        
+        setVideos(data.videos || []);
+      } catch (err) {
+        console.error('Error fetching videos:', err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVideos();
+  }, []);
+
+  const formatDate = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('ro-RO', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  const truncateDescription = (text, maxLength = 150) => {
+    if (!text) return '';
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + '...';
+  };
+
   return (
     <div className={styles.page}>
       <section className={styles.hero}>
@@ -15,47 +64,69 @@ export default function Podcasturi() {
 
       <section className={styles.section}>
         <div className={styles.container}>
-          <div className={styles.episodesGrid}>
-            <div className={styles.episodeCard}>
-              <div className={styles.episodeImage}>
-                <p>🎙️</p>
-              </div>
-              <div className={styles.episodeContent}>
-                <h3>Episodul 1</h3>
-                <p className={styles.episodeDescription}>
-                  Primul episod – despre cum am pornit totul și de ce credem că e important să dăm 
-                  tinerilor o voce.
-                </p>
-                <a href="#" className={styles.listenBtn}>Ascultă acum</a>
-              </div>
+          {loading && (
+            <div className={styles.loadingState}>
+              <p>Se încarcă podcasturile...</p>
             </div>
-            <div className={styles.episodeCard}>
-              <div className={styles.episodeImage}>
-                <p>🎙️</p>
-              </div>
-              <div className={styles.episodeContent}>
-                <h3>Episodul 2</h3>
-                <p className={styles.episodeDescription}>
-                  Discuție despre cum tinerii pot să-și construiască cariera în România și ce înseamnă 
-                  să faci alegeri care chiar te fac fericit.
-                </p>
-                <a href="#" className={styles.listenBtn}>Ascultă acum</a>
-              </div>
+          )}
+
+          {error && (
+            <div className={styles.errorState}>
+              <p>⚠️ {error}</p>
+              <p className={styles.errorHint}>
+                Asigură-te că ai configurat YOUTUBE_API_KEY în fișierul .env.local
+              </p>
             </div>
-            <div className={styles.episodeCard}>
-              <div className={styles.episodeImage}>
-                <p>🎙️</p>
-              </div>
-              <div className={styles.episodeContent}>
-                <h3>Episodul 3</h3>
-                <p className={styles.episodeDescription}>
-                  Un invitat special ne povestește despre cum să transformi o idee într-un proiect real 
-                  și de ce e important să nu renunți când lucrurile devin grele.
-                </p>
-                <a href="#" className={styles.listenBtn}>Ascultă acum</a>
-              </div>
+          )}
+
+          {!loading && !error && videos.length === 0 && (
+            <div className={styles.emptyState}>
+              <p>Nu s-au găsit podcasturi momentan.</p>
             </div>
-          </div>
+          )}
+
+          {!loading && !error && videos.length > 0 && (
+            <div className={styles.episodesGrid}>
+              {videos.map((video) => (
+                <div key={video.id} className={styles.episodeCard}>
+                  <div className={styles.episodeImage}>
+                    {video.thumbnail ? (
+                      <Image
+                        src={video.thumbnail}
+                        alt={video.title}
+                        width={400}
+                        height={225}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                      />
+                    ) : (
+                      <p>🎙️</p>
+                    )}
+                  </div>
+                  <div className={styles.episodeContent}>
+                    <h3>{video.title}</h3>
+                    {video.description && (
+                      <p className={styles.episodeDescription}>
+                        {truncateDescription(video.description)}
+                      </p>
+                    )}
+                    {video.publishedAt && (
+                      <p className={styles.episodeDate}>
+                        {formatDate(video.publishedAt)}
+                      </p>
+                    )}
+                    <a 
+                      href={`https://www.youtube.com/watch?v=${video.id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={styles.listenBtn}
+                    >
+                      Ascultă acum
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -105,4 +176,3 @@ export default function Podcasturi() {
     </div>
   );
 }
-

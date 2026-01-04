@@ -16,6 +16,7 @@ export default function Formular230() {
     cnp: '',
     email: '',
     telefon: '',
+    telefonPrefix: '+40',
     localitate: '',
     judet: '',
     strada: '',
@@ -26,12 +27,132 @@ export default function Formular230() {
     acordEmail: true
   });
 
+  const [cnpError, setCnpError] = useState('');
+  const [emailError, setEmailError] = useState('');
+
+  const validateCNP = (cnp) => {
+    const cleanedCnp = cnp.trim();
+    
+    if (!cleanedCnp) {
+      setCnpError('');
+      return true;
+    }
+
+    if (!/^\d{13}$/.test(cleanedCnp)) {
+      setCnpError('CNP-ul trebuie să conțină exact 13 cifre');
+      return false;
+    }
+
+    const firstDigit = parseInt(cleanedCnp[0]);
+    if (firstDigit < 1 || firstDigit > 8) {
+      setCnpError('Prima cifră a CNP-ului este invalidă');
+      return false;
+    }
+
+    const year = parseInt(cleanedCnp.substr(1, 2));
+    const month = parseInt(cleanedCnp.substr(3, 2));
+    const day = parseInt(cleanedCnp.substr(5, 2));
+
+    let fullYear;
+    if (firstDigit === 1 || firstDigit === 2) {
+      fullYear = 1900 + year;
+    } else if (firstDigit === 3 || firstDigit === 4) {
+      fullYear = 1800 + year;
+    } else if (firstDigit === 5 || firstDigit === 6) {
+      fullYear = 2000 + year;
+    } else {
+      fullYear = 2000 + year;
+    }
+
+    if (month < 1 || month > 12) {
+      setCnpError('Luna din CNP este invalidă');
+      return false;
+    }
+
+    if (day < 1 || day > 31) {
+      setCnpError('Ziua din CNP este invalidă');
+      return false;
+    }
+
+    const date = new Date(fullYear, month - 1, day);
+    if (date.getFullYear() !== fullYear || date.getMonth() !== month - 1 || date.getDate() !== day) {
+      setCnpError('Data din CNP este invalidă');
+      return false;
+    }
+
+    const countyCode = parseInt(cleanedCnp.substr(7, 2));
+    if (countyCode < 1 || countyCode > 52) {
+      setCnpError('Codul județului din CNP este invalid');
+      return false;
+    }
+
+    const weights = [2, 7, 9, 1, 4, 6, 3, 5, 8, 2, 7, 9];
+    let sum = 0;
+    for (let i = 0; i < 12; i++) {
+      sum += parseInt(cleanedCnp[i]) * weights[i];
+    }
+    const remainder = sum % 11;
+    const controlDigit = remainder < 10 ? remainder : 1;
+    const providedControlDigit = parseInt(cleanedCnp[12]);
+
+    if (controlDigit !== providedControlDigit) {
+      setCnpError('Cifra de control a CNP-ului este invalidă');
+      return false;
+    }
+
+    setCnpError('');
+    return true;
+  };
+
+  const validateEmail = (email) => {
+    const cleanedEmail = email.trim();
+    
+    if (!cleanedEmail) {
+      setEmailError('');
+      return true;
+    }
+
+    if (!cleanedEmail.includes('@')) {
+      setEmailError('Adresa de email trebuie să conțină @');
+      return false;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(cleanedEmail)) {
+      setEmailError('Adresa de email nu este validă');
+      return false;
+    }
+
+    setEmailError('');
+    return true;
+  };
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
+
+    if (name === 'cnp') {
+      if (value.length === 13) {
+        validateCNP(value);
+      } else {
+        setCnpError('');
+      }
+    }
+
+    if (name === 'email') {
+      validateEmail(value);
+    }
+  };
+
+  const handleCnpBlur = (e) => {
+    validateCNP(e.target.value);
+  };
+
+  const handleEmailBlur = (e) => {
+    validateEmail(e.target.value);
   };
 
   const handleSignatureEnd = () => {
@@ -53,19 +174,42 @@ export default function Formular230() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
+    if (!validateCNP(formData.cnp)) {
+      alert('Vă rugăm să introduceți un CNP valid!');
+      return;
+    }
+    
     if (isSignatureEmpty) {
       alert('Vă rugăm să adăugați semnătura!');
       return;
     }
     
-    // Save form data to sessionStorage for test230 page
     const dataToPass = {
       ...formData,
       signatureData: signatureData
     };
     sessionStorage.setItem('form230Data', JSON.stringify(dataToPass));
     
-    // Redirect to test230 page
+    try {
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          formData: formData,
+          signatureData: signatureData,
+          action: 'form_submit'
+        }),
+      });
+      
+      if (!response.ok) {
+        console.error('Failed to send email notification');
+      }
+    } catch (error) {
+      console.error('Error sending email:', error);
+    }
+    
     window.location.href = '/test230';
   };
 
@@ -153,10 +297,15 @@ export default function Formular230() {
                       name="cnp" 
                       value={formData.cnp}
                       onChange={handleChange}
+                      onBlur={handleCnpBlur}
                       maxLength="13"
                       pattern="[0-9]{13}"
                       required 
+                      className={cnpError ? styles.inputError : ''}
                     />
+                    {cnpError && (
+                      <small className={styles.errorMessage}>{cnpError}</small>
+                    )}
                   </div>
                   <div className={styles.formGroup}>
                     <label htmlFor="email">Email</label>
@@ -166,17 +315,46 @@ export default function Formular230() {
                       name="email" 
                       value={formData.email}
                       onChange={handleChange}
+                      onBlur={handleEmailBlur}
+                      className={emailError ? styles.inputError : ''}
                     />
+                    {emailError && (
+                      <small className={styles.errorMessage}>{emailError}</small>
+                    )}
                   </div>
                   <div className={styles.formGroup}>
                     <label htmlFor="telefon">Telefon</label>
-                    <input 
-                      type="tel" 
-                      id="telefon" 
-                      name="telefon" 
-                      value={formData.telefon}
-                      onChange={handleChange}
-                    />
+                    <div className={styles.phoneInputContainer}>
+                      <select
+                        id="telefonPrefix"
+                        name="telefonPrefix"
+                        value={formData.telefonPrefix}
+                        onChange={handleChange}
+                        className={styles.phonePrefix}
+                      >
+                        <option value="+40">+40 (RO)</option>
+                        <option value="+1">+1 (US/CA)</option>
+                        <option value="+44">+44 (UK)</option>
+                        <option value="+49">+49 (DE)</option>
+                        <option value="+33">+33 (FR)</option>
+                        <option value="+39">+39 (IT)</option>
+                        <option value="+34">+34 (ES)</option>
+                        <option value="+36">+36 (HU)</option>
+                        <option value="+359">+359 (BG)</option>
+                        <option value="+381">+381 (RS)</option>
+                        <option value="+373">+373 (MD)</option>
+                        <option value="+380">+380 (UA)</option>
+                      </select>
+                      <input 
+                        type="tel" 
+                        id="telefon" 
+                        name="telefon" 
+                        value={formData.telefon}
+                        onChange={handleChange}
+                        placeholder="712345678"
+                        className={styles.phoneNumber}
+                      />
+                    </div>
                   </div>
                 </div>
 

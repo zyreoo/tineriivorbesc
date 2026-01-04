@@ -5,7 +5,6 @@ import styles from './page.module.css';
 export default function Home() {
   return (
     <div className={styles.home}>
-      {/* Hero Section */}
       <section className={styles.hero}>
         <div className={styles.heroContent}>
           <h1 className={styles.heroTitle}>Tinerii Vorbesc</h1>
@@ -39,7 +38,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Gallery Section */}
       <section className={styles.gallerySection}>
         <div className={styles.container}>
           <h2 className={styles.sectionTitle}>Din culisele noastre</h2>

@@ -131,11 +131,68 @@
   border-color: var(--primary);
 }
 
+.formGroup input.inputError {
+  border-color: #dc2626;
+}
+
+.formGroup input.inputError:focus {
+  border-color: #dc2626;
+}
+
 .formGroup small {
   display: block;
   margin-top: 0.25rem;
   color: var(--text-secondary);
   font-size: 0.85rem;
+}
+
+.errorMessage {
+  color: #dc2626 !important;
+  font-weight: 500;
+}
+
+.phoneInputContainer {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+.phonePrefix {
+  padding: 0.75rem 0.5rem;
+  border: 2px solid var(--border);
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  font-family: inherit;
+  transition: border-color 0.3s;
+  background: var(--background);
+  color: var(--text-primary);
+  cursor: pointer;
+  flex-shrink: 0;
+  width: 90px;
+  min-width: 90px;
+}
+
+.phonePrefix:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.phoneNumber {
+  flex: 1;
+  min-width: 0;
+  padding: 0.75rem;
+  border: 2px solid var(--border);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-family: inherit;
+  transition: border-color 0.3s;
+  background: var(--background);
+  color: var(--text-primary);
+}
+
+.phoneNumber:focus {
+  outline: none;
+  border-color: var(--primary);
 }
 
 .checkboxLabel {
@@ -266,7 +323,7 @@
 
 .clearSignatureBtn {
   padding: 0.75rem 1.5rem;
-  background: var(--text-secondary);
+  background: var(--secondary);
   color: white;
   border: none;
   border-radius: 0.5rem;
@@ -277,8 +334,9 @@
 }
 
 .clearSignatureBtn:hover {
-  background: #4a4a4a;
+  background: #475569;
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(100, 116, 139, 0.3);
 }
 
 

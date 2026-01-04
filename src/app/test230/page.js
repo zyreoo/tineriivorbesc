@@ -24,12 +24,9 @@ export default function Test230() {
   const [showControls, setShowControls] = useState(false);
   const [scaleFactor, setScaleFactor] = useState({ x: 1, y: 1 });
   
-  // Original reference dimensions (the size positions were calibrated for)
-  // These should match the natural image dimensions or the size used for calibration
-  const referenceWidth = 800; // Adjust this to match your calibration size
-  const referenceHeight = 1133; // Adjust this to match your calibration size
+  const referenceWidth = 800;
+  const referenceHeight = 1133;
 
-  // Calculate scale factor based on displayed image size
   useEffect(() => {
     const calculateScale = () => {
       if (!imageContainerRef.current) return;
@@ -37,7 +34,6 @@ export default function Test230() {
       const img = imageContainerRef.current.querySelector('img');
       if (!img) return;
       
-      // Wait for image to load
       if (img.complete) {
         const displayedWidth = img.offsetWidth;
         const displayedHeight = img.offsetHeight;
@@ -61,9 +57,7 @@ export default function Test230() {
 
     calculateScale();
     
-    // Recalculate on window resize
     window.addEventListener('resize', calculateScale);
-    // Also recalculate after a short delay to ensure image is rendered
     const timeout = setTimeout(calculateScale, 100);
     
     return () => {
@@ -72,7 +66,6 @@ export default function Test230() {
     };
   }, []);
 
-  // Load form data from sessionStorage on mount
   useEffect(() => {
     const savedData = sessionStorage.getItem('form230Data');
     if (savedData) {
@@ -121,11 +114,41 @@ export default function Test230() {
 
   const downloadCompletedImage = async () => {
     try {
-      // Create canvas
+      try {
+        const emailFormData = {
+          nume: fields.nume.value,
+          prenume: fields.prenume.value,
+          cnp: fields.cnp.value,
+          email: fields.email.value,
+          telefon: fields.telefon.value,
+          localitate: fields.localitate.value,
+          judet: fields.judet.value,
+          strada: fields.strada.value,
+          numar: fields.numar.value,
+        };
+        
+        const response = await fetch('/api/send-email', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            formData: emailFormData,
+            signatureData: signatureData,
+            action: 'download_image'
+          }),
+        });
+        
+        if (!response.ok) {
+          console.error('Failed to send email notification');
+        }
+      } catch (emailError) {
+        console.error('Error sending email:', emailError);
+      }
+      
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
       
-      // Load the background image
       const img = new window.Image();
       img.crossOrigin = 'anonymous';
       
@@ -135,50 +158,39 @@ export default function Test230() {
         img.src = '/tineriivorbesc.jpg';
       });
       
-      // Get the displayed image size from the DOM (use fixed container width)
       const displayedImg = imageContainerRef.current?.querySelector('img');
-      const containerWidth = 1200; // Fixed container width
+      const containerWidth = 1200;
       const displayedWidth = displayedImg ? displayedImg.offsetWidth : containerWidth;
       const displayedHeight = displayedImg ? displayedImg.offsetHeight : (img.height * containerWidth / img.width);
       
-      // Calculate scale factors
       const scaleX = img.width / displayedWidth;
       const scaleY = img.height / displayedHeight;
       
-      // Set canvas size to match natural image size (maintain original size)
       canvas.width = img.width;
       canvas.height = img.height;
       
-      // Draw the background image at full size
       ctx.drawImage(img, 0, 0, img.width, img.height);
       
-      // Load and use Arimo font at exactly 12px (scaled to match image size)
       const fontSize = 20 * scaleY;
       
-      // Load Arimo font
       try {
-        // Try loading Arimo font file directly
         const fontUrl = 'https://fonts.gstatic.com/s/arimo/v28/P5sfzZCDf9_T_10c3i9MeHcyai_9Yg.woff2';
         const font = new FontFace('Arimo', `url(${fontUrl})`);
         await font.load();
         document.fonts.add(font);
         
-        // Wait for font to be ready
         await document.fonts.ready;
         
-        // Set font to exactly 12px Arimo (scaled proportionally to maintain size on full image)
         ctx.font = `${fontSize}px Arimo, sans-serif`;
       } catch (fontError) {
         console.warn('Could not load Arimo font file, trying Google Fonts API:', fontError);
         
-        // Fallback: Load Arimo via Google Fonts CSS
         try {
           if (!document.querySelector('link[href*="fonts.googleapis.com"][href*="Arimo"]')) {
             const link = document.createElement('link');
             link.rel = 'stylesheet';
             link.href = 'https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&display=swap';
             document.head.appendChild(link);
-            // Wait for font to load
             await new Promise(resolve => setTimeout(resolve, 1000));
           }
           ctx.font = `${fontSize}px "Arimo", sans-serif`;
@@ -188,11 +200,9 @@ export default function Test230() {
         }
       }
       
-      // Set text properties
       ctx.fillStyle = '#000000';
       ctx.textBaseline = 'top';
       
-      // Helper function to replace Romanian characters
       const replaceRomanianChars = (text) => {
         if (!text) return '';
         return text
@@ -203,7 +213,6 @@ export default function Test230() {
           .replace(/ț/g, 't').replace(/Ț/g, 'T');
       };
       
-      // Helper function to capitalize only first letter of each word
       const capitalizeFirstLetter = (text) => {
         if (!text) return '';
         return text
@@ -213,12 +222,10 @@ export default function Test230() {
           .join(' ');
       };
       
-      // Helper function to scale coordinates to natural image size
       const scalePos = (pos, useX = true) => {
         return pos * (useX ? scaleX : scaleY);
       };
       
-      // Draw text fields with scaled positions
       if (fields.nume.value) {
         ctx.fillText(replaceRomanianChars(capitalizeFirstLetter(fields.nume.value)), scalePos(fields.nume.left), scalePos(fields.nume.top, false));
       }
@@ -232,9 +239,8 @@ export default function Test230() {
       }
       
       if (fields.cnp.value) {
-        // Draw CNP digits with increased spacing
         const cnpDigits = fields.cnp.value.toString().split('');
-        const digitSpacing = 38 * scaleX; // Increased from 13.5 to 18 for more space
+        const digitSpacing = 38 * scaleX;
         cnpDigits.forEach((digit, index) => {
           ctx.fillText(digit, scalePos(fields.cnp.left) + (index * digitSpacing), scalePos(fields.cnp.top, false));
         });
@@ -264,7 +270,6 @@ export default function Test230() {
         ctx.fillText(fields.telefon.value, scalePos(fields.telefon.left), scalePos(fields.telefon.top, false));
       }
       
-      // Draw signature if available
       if (signatureData) {
         const signatureImg = new window.Image();
         signatureImg.crossOrigin = 'anonymous';
@@ -281,7 +286,6 @@ export default function Test230() {
         ctx.drawImage(signatureImg, scalePos(fields.semnatura.left), scalePos(fields.semnatura.top, false), signatureWidth, signatureHeight);
       }
       
-      // Convert canvas to blob and download
       canvas.toBlob((blob) => {
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
@@ -362,7 +366,6 @@ export default function Test230() {
           }}
         />
         
-        {/* Form Fields */}
         {Object.entries(fields).map(([fieldName, field]) => (
           <input
             key={fieldName}

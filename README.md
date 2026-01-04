@@ -50,12 +50,25 @@ cd tineriivorbesc
 npm install
 ```
 
-3. Run the development server:
+3. Set up environment variables:
+   - Create a `.env.local` file in the root directory
+   - Add your YouTube API key (required for podcasts page):
+     ```
+     YOUTUBE_API_KEY=your-youtube-api-key-here
+     ```
+   - To get a YouTube API key:
+     1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+     2. Create a new project or select an existing one
+     3. Enable the YouTube Data API v3
+     4. Create credentials (API Key)
+     5. Copy the API key to your `.env.local` file
+
+4. Run the development server:
 ```bash
 npm run dev
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
 ### Build for Production
 
@@ -94,6 +107,37 @@ src/
 - ✅ Project gallery
 - ✅ Blog structure
 - ✅ Sponsorship information and forms
+- ✅ Form 230 (Tax Redirection Form) with signature capture
+- ✅ Email notifications for form submissions (sent to carinatanaselea993@gmail.com)
+- ✅ PDF form generation and download
+- ✅ Dynamic YouTube video integration for podcasts page
+- ✅ Automatic fetching of all videos from YouTube channel
+
+## Email Notifications
+
+The website includes automated email notifications for Form 230 submissions:
+
+- **Recipient**: carinatanaselea993@gmail.com
+- **Triggers**:
+  1. When a user submits the Form 230 with their personal details
+  2. When a user downloads the completed form image
+- **Content**: Email includes all form data and signature (as attachment)
+
+### Setting Up Email Credentials
+
+1. Use a Gmail account for sending emails
+2. Generate an App-Specific Password (not your regular password):
+   - Visit: https://myaccount.google.com/apppasswords
+   - Sign in with your Google account
+   - Select "Mail" and "Other" (custom name)
+   - Copy the 16-character password
+3. Add to `.env.local`:
+   ```
+   EMAIL_USER=your-email@gmail.com
+   EMAIL_PASSWORD=your-16-char-app-password
+   ```
+
+**Important**: Never commit `.env.local` to version control. It's already in `.gitignore`.
 
 ## Contact
 
