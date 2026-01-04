@@ -18,20 +18,28 @@ export default function Proiecte() {
       <section className={styles.section}>
         <div className={styles.container}>
           <div className={styles.projectSection}>
-            <h2>Proiecte în desfășurare</h2>
+            <h2>🎙️ Podcast</h2>
+            <div className={styles.projectCard}>
+              <p>
+                Podcastul nostru – unde vorbim cu oameni interesanți despre lucruri care contează. 
+                Fără scripturi, fără filtre, doar conversații reale cu tineri care fac lucruri interesante, 
+                discuții deschise despre subiecte care contează și povești pe care le ascultăm cu plăcere.
+              </p>
+              <Link href="/podcasturi" className={styles.projectLink}>
+                Ascultă podcasturile →
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.section}>
+        <div className={styles.container}>
+          <div className={styles.projectSection}>
+            <h2>📅 Evenimente</h2>
             <div className={styles.projectsGrid}>
               <div className={styles.projectCard}>
-                <h3>🎙️ Podcast</h3>
-                <p>
-                  Podcastul nostru – unde vorbim cu oameni interesanți despre lucruri care contează. 
-                  Fără scripturi, fără filtre, doar conversații reale.
-                </p>
-                <Link href="/podcasturi" className={styles.projectLink}>
-                  Vezi episoadele →
-                </Link>
-              </div>
-              <div className={styles.projectCard}>
-                <h3>📅 Evenimente</h3>
+                <h3>Organizare evenimente</h3>
                 <p>
                   Organizăm evenimente când putem – workshop-uri, întâlniri, conferințe. 
                   Ideea e să aducem oameni împreună și să creăm momente în care se întâmplă ceva real.
@@ -39,6 +47,14 @@ export default function Proiecte() {
                 <Link href="/contact" className={styles.projectLink}>
                   Află mai multe →
                 </Link>
+              </div>
+              <div className={styles.projectCard}>
+                <h3>🚐 Caravana Tinerii Vorbesc</h3>
+                <p>
+                  Visul nostru mare: să mergem cu un van prin România și să ajungem în orașe 
+                  unde tinerii nu prea au unde să-și spună ideile. Vrem să creăm spații de 
+                  conversație și să dăm voce tinerilor din toate colțurile țării.
+                </p>
               </div>
             </div>
           </div>
@@ -48,14 +64,22 @@ export default function Proiecte() {
       <section className={styles.section}>
         <div className={styles.container}>
           <div className={styles.projectSection}>
-            <h2>Inițiative viitoare</h2>
-            <div className={styles.futureProject}>
-              <h3>🚐 Caravana Tinerii Vorbesc</h3>
-              <p>
-                Visul nostru mare: să mergem cu un van prin România și să ajungem în orașe 
-                unde tinerii nu prea au unde să-și spună ideile. E în planuri, dar vrem să-l 
-                facem când o să fie momentul potrivit.
-              </p>
+            <h2>📺 Proiecte în desfășurare</h2>
+            <div className={styles.projectsGrid}>
+              <div className={styles.projectCard}>
+                <h3>📺 TV</h3>
+                <p>
+                  Proiecte și apariții în emisiuni TV unde discutăm despre tineri, despre 
+                  oportunități și despre cum putem crea un impact pozitiv în comunitate.
+                </p>
+              </div>
+              <div className={styles.projectCard}>
+                <h3>📻 Radio</h3>
+                <p>
+                  Colaborări cu posturi de radio pentru a ajunge la mai mulți tineri și 
+                  a le oferi o platformă pentru a-și exprima ideile și opiniile.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -204,4 +228,3 @@ export default function Proiecte() {
     </div>
   );
 }
-
