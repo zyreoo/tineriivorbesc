@@ -56,8 +56,19 @@ export default function Podcasturi() {
         <div className={styles.container}>
           <h1>Podcasturile noastre</h1>
           <p className={styles.heroDescription}>
-            Conversații reale cu oameni reali. Interviuri cu tineri care fac lucruri interesante, 
-            discuții deschise despre subiecte care contează și povești pe care le ascultăm cu plăcere.
+            Podcasturile Tinerii Vorbesc cuprind mai multe tipuri de conversații, toate construite în jurul aceleiași idei: vocea tinerilor contează și merită să fie auzită.
+          </p>
+          <p className={styles.heroText}>
+            Unele episoade sunt dedicate tinerilor care își fac vocea auzită prin experiențele lor de viață fie că vorbim despre performanță, fie despre parcursuri personale dificile, precum viața în orfelinat, dependențe, pierderi sau momente care le-au schimbat complet direcția. Sunt povești reale, spuse fără filtre.
+          </p>
+          <p className={styles.heroText}>
+            Alte conversații sunt cu adulți și persoane publice care au știut să transforme vocea tinereții în impact: antreprenori, artiști, sportivi, creatori de conținut, medici sau profesioniști din diverse domenii, oameni care pot oferi perspectivă, inspirație și direcție.
+          </p>
+          <p className={styles.heroText}>
+            Există și episoade în care tineri pasionați de un domeniu stau față în față cu adulți care au succes în acel domeniu. Acolo se nasc dialoguri sincere despre vocație, drum profesional, greșeli, alegeri și oportunități reale.
+          </p>
+          <p className={styles.heroText}>
+            Indiferent de format, podcasturile noastre sunt spații autentice de dialog, unde poveștile nu sunt idealizate, iar experiența se întâlnește cu dorința de a crește. Sunt conversații care dau curaj, creează conexiuni și arată că drumul fiecăruia este diferit, dar posibil.
           </p>
         </div>
       </section>

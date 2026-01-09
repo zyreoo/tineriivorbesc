@@ -8,21 +8,24 @@ export default function Home() {
       <section className={styles.hero}>
         <div className={styles.heroContent}>
           <h1 className={styles.heroTitle}>Tinerii Vorbesc</h1>
-          <p className={styles.heroSubtitle}>Vocea noii generații</p>
+          <p className={styles.heroSubtitle}>Brand media național. Vocea tinerilor din România.</p>
           <p className={styles.heroDescription}>
-            Podcasturi, proiecte și evenimente pentru tineri care vor să facă diferența.
+            Tinerii Vorbesc este un brand media național, construit pe baza unei asociații care răspunde unei probleme reale din societatea românească.
           </p>
           <p className={styles.heroText}>
-            Hei! Bine ai venit. Aici nu e doar un ONG clasic – e mai mult decât atât. E un loc unde tinerii 
-            chiar au ceva de spus și unde cineva chiar ascultă.
+            Prea mulți tineri au vocație, talent și dorință de a reuși, dar nu au șansa, contextul sau conexiunile necesare pentru a activa în domeniul care îi reprezintă cu adevărat. Noi existăm pentru a schimba acest lucru.
           </p>
           <p className={styles.heroText}>
-            Am început cu un podcast, dar am ajuns să construim o comunitate. Organizăm evenimente, facem proiecte 
-            și, cel mai important, dăm oamenilor tineri șansa să-și spună povestea.
+            Misiunea noastră este să oferim tuturor tinerilor din România o voce, direcție și oportunități reale de dezvoltare. Îi ajutăm să-și facă vocea auzită și să-și transforme pasiunea într-un drum profesional, devenind legătura dintre ei, nișa în care vor să activeze și mentorii care îi pot ghida.
           </p>
           <p className={styles.heroText}>
-            Dacă ai o idee, o opinie sau pur și simplu vrei să te implici, ești în locul potrivit. 
-            Hai să vorbim!
+            Prin podcasturi, proiecte media și evenimente naționale, aducem împreună tineri aflați la început de drum și profesioniști cu experiență din diverse domenii. Creăm contexte de învățare, dialog și colaborare, facilităm accesul la know-how, la exemple reale de reușită și la oameni care pot deschide uși.
+          </p>
+          <p className={styles.heroText}>
+            Tinerii Vorbesc nu este doar despre vizibilitate, ci despre șanse reale. Despre a reduce decalajul dintre potențial și oportunitate. Despre a construi o generație care nu este blocată de lipsa de conexiuni, ci susținută să crească în direcția vocației sale.
+          </p>
+          <p className={styles.heroText}>
+            Dacă ești tânăr și simți că ai ceva de oferit, dar nu știi de unde să începi, aici este punctul tău de plecare. Tinerii Vorbesc – puntea dintre vocație, oameni și viitor.
           </p>
           <div className={styles.ctaButtons}>
             <Link href="/podcasturi" className={`${styles.btn} ${styles.btnPrimary}`}>
